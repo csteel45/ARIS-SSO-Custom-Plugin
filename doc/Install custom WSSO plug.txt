@@ -1,0 +1,38 @@
+Install custom WSSO plug-in in ARIS 9.8
+
+Introduction
+Since the ARIS infrastructure 96.0.3 has been released, UMC supports custom SSO plug-ins. Please read the following document carefully in order to understand the steps to install the custom WSSO plug-in into your ARIS 9.8 environment.
+
+The UMC and ABS runnables have to be enhanced with the custom WSSO plugin via ACC commands. These commands are run from the install script (install.bat) supplied with this document, but can be run stand-alone from the Aris Cloud Control (ACC) prompt.
+
+The runnables then have to be re-configured with the specific system property "com.aris.umc.sso.plugins.active=true" via ACC command, also part of the install.bat.
+
+Finally, the downloadable client (client.zip) file needs to be modified to include the pack version of the custom wsso jar file, and the client arisloader.cfg needs to be modified. 
+
+NOTE: It is assumed that the user?s Windows logon ids are the same as the ?boeingWSSOW2K? header value passed by WSSO AND those ids are registered in UMC. If not, this will cause authentication of the download clients to fail. Also, once the installation has completed, in order for the SSO to work, users that have already used the download clients (Architect/Designer), will need to delete their client download directory (ex. C:\Users\JDoe\ARIS90)
+
+Installation Steps
+
+1. Unzip the install.zip file in the base ARIS install directory (ex. C:\SoftwareAG\ARIS9.8).
+2. Set your path to include the JAVA_HOME\bin directory. (ex. Set PATH=C:\jdk1.8\bin;%PATH%)
+3. Test that Java 7 is in your path (ex. C:> jar ?version)
+4. Start the Aris Cloud Controller (in Start->ARIS->Administration->ARIS Cloud Controller)
+5. Type ?list? at the ACC prompt (ex. ACC+ localhost> list)
+6. Verify that the runnables all end in _m. If not, follow step a. If so, skip it.
+a. Edit the install.bat file and change the lines ABS=abs_m and UMC=umcadmin_m to include the correct suffix (ex. If your runnables end in _s change the lines to ABS=abs_s and UMC=umcadmin_s)
+7. Check the cloud agent username and password by right clicking on the Start->ARIS->Administration->ARIS Cloud Controller icon and selecting properties. In the target box, you should see a ?u Clous and a ?pwd g3h31m. If you do not, follow step a) below, or if they are the same, skip to 8.
+a. Write down the username (-u input) and passwords (-pwd input) from the cloud controller properties.
+b. Edit the install.bat file and change the USER and PASS variables to match (ex. if user is joe, change set USER=Clous to set USER=joe)
+8. Although unlikely, if you did change the cloud agent port during the original install from 9001, you will need to edit the install.bat and change that as well.
+9. Run the install.bat file from a cmd window in the ARIS home directory (ex. C:\SoftwareAG\ARIS9.8> install.bat)
+10. If prompted to overwrite any files, select No. The only time it will overwrite is if you run it more than once it will try to overwrite the backed-up original files with the modified ones. DO NOT OVERWRITE THEM.
+
+The install.bat file is heavily commented and easy to follow. If problems arise with the install, please look through the file and try and correct mistakes manually, following the commands in the file.
+
+TroubleShooting
+
+The WSSO custom plugin logs information to the umc-wsso-plugin.log files. These files can be found in the ARIS_HOME/server/bin/work/work_abs_m and ARIS_HOME/server/bin/work/work_umcadmin_m directories on the server, and the USER_HOME/ARIS90 directory on the download client machines. Please collect each of these files before contacting Software AG Government Solutions.
+
+If you any issues, please alert Software AG Government Solutions directly via Bob Foery (Account Manager), Chris Steel (Chief Solution Architect), or Ryan Bittner (Technical Account Manager), before entering a support ticket.
+ 
+
