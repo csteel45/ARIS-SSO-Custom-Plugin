@@ -1,0 +1,73 @@
+00:02:19.071 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.080 INFO  SSOProperties.getInstance:76   SSOProperties instance is null, initializing.
+00:02:19.081 WARN  SSOProperties.<init>:63   Constructor called
+00:02:19.081 ERROR SSOProperties.init:91   Loading properties file: /Users/Chris.Steel/workspace/ARIS-SSO-Custom-Plugin/base/conf/sso-plugin.properties
+00:02:19.081 INFO  SSOProperties.load:117   called for file: /Users/Chris.Steel/workspace/ARIS-SSO-Custom-Plugin/base/conf/sso-plugin.properties
+00:02:19.082 INFO  SSOProperties.load:122   Loaded properties file: /Users/Chris.Steel/workspace/ARIS-SSO-Custom-Plugin/base/conf/sso-plugin.properties
+00:02:19.082 INFO  SSOProperties.init:95   Added file watcher on file: /Users/Chris.Steel/workspace/ARIS-SSO-Custom-Plugin/base/conf/sso-plugin.properties
+00:02:19.083 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.084 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.084 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.096 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.097 DEBUG saggs.getAppender:107   called
+00:02:19.097 INFO  saggs.loadProperties:136   Loading logger properties
+00:02:19.098 INFO  saggs.loadProperties:143   Loaded logger properties
+00:02:19.099 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.100 ERROR SSOTokenValidator.<init>:48   constructor called.
+00:02:19.104 DEBUG SSOTokenValidator.verifySsoToken:73   called with tenant = default and token = 12345678
+00:02:19.106 DEBUG SSOTokenValidator.getUserName:187   called with token: 12345678
+00:02:19.106 DEBUG SSOTokenValidator.getUserName:195   returning user: 12345678
+00:02:19.106 DEBUG SSOTokenValidator.getDomain:158   called with token: 12345678
+00:02:19.107 WARN  SSOTokenValidator.getDomain:164   No domain found for token: 12345678
+00:02:19.107 DEBUG SSOAuthenticationResult.<init>:60   constructor called with authenticated: true tenant:default userName:12345678
+00:02:19.108 DEBUG SSOAuthenticationResult.isAuthenticated:95   isAuthenticated called. Returning: true
+00:02:19.108 DEBUG SSOTokenValidator.verifySsoToken:73   called with tenant = default and token = rvki12
+00:02:19.109 DEBUG SSOTokenValidator.getUserName:187   called with token: rvki12
+00:02:19.109 DEBUG SSOTokenValidator.getUserName:195   returning user: rvki12
+00:02:19.110 DEBUG SSOTokenValidator.getDomain:158   called with token: rvki12
+00:02:19.110 WARN  SSOTokenValidator.getDomain:164   No domain found for token: rvki12
+00:02:19.111 DEBUG SSOAuthenticationResult.<init>:60   constructor called with authenticated: true tenant:default userName:rvki12
+00:02:19.111 DEBUG SSOAuthenticationResult.isAuthenticated:95   isAuthenticated called. Returning: true
+00:02:19.112 DEBUG SSOTokenValidator.verifySsoToken:73   called with tenant = default and token = nw\rvki12
+00:02:19.113 DEBUG SSOTokenValidator.getUserName:187   called with token: nw\rvki12
+00:02:19.113 DEBUG SSOTokenValidator.getUserName:192   returning stripped user: rvki12
+00:02:19.113 DEBUG SSOTokenValidator.getDomain:158   called with token: nw\rvki12
+00:02:19.114 DEBUG SSOTokenValidator.getDomain:174   returning domain: nw
+00:02:19.114 DEBUG SSOAuthenticationResult.<init>:60   constructor called with authenticated: true tenant:default userName:nw\rvki12
+00:02:19.115 DEBUG SSOAuthenticationResult.isAuthenticated:95   isAuthenticated called. Returning: true
+00:02:19.115 DEBUG SSOTokenValidator.verifySsoToken:73   called with tenant = default and token = nw.boeing.com\rvki12
+00:02:19.116 DEBUG SSOTokenValidator.getUserName:187   called with token: nw.boeing.com\rvki12
+00:02:19.117 DEBUG SSOTokenValidator.getUserName:192   returning stripped user: rvki12
+00:02:19.117 DEBUG SSOTokenValidator.getDomain:158   called with token: nw.boeing.com\rvki12
+00:02:19.117 DEBUG SSOTokenValidator.getDomain:170   Trimming domain: nw.boeing.com
+00:02:19.118 DEBUG SSOTokenValidator.getDomain:174   returning domain: nw
+00:02:19.119 DEBUG SSOAuthenticationResult.<init>:60   constructor called with authenticated: true tenant:default userName:nw\rvki12
+00:02:19.120 DEBUG SSOAuthenticationResult.isAuthenticated:95   isAuthenticated called. Returning: true
+00:02:19.122 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.123 ERROR SSOTokenValidator.<init>:48   constructor called.
+00:02:19.123 DEBUG SSOTokenValidator.getSsoHeaderName:206   called.
+00:02:19.124 DEBUG SSOTokenValidator.getSsoHeaderName:208   returning: boeingWSSOW2K
+00:02:19.125 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.126 INFO  SSOProperties.getInstance:74   SSOProperties.getInstance called
+00:02:19.126 ERROR SSOTokenValidator.<init>:48   constructor called.
+00:02:19.127 DEBUG SSOTokenValidator.verifySsoToken:101   called with requestUri = http://www.myuri.com parameters = {name=[Ljava.lang.String;@65e579dc} headers = 
+00:02:19.127 DEBUG SSOTokenValidator.getSsoHeaderName:206   called.
+00:02:19.128 DEBUG SSOTokenValidator.getSsoHeaderName:208   returning: boeingWSSOW2K
+00:02:19.128 DEBUG SSOTokenValidator.verifySsoToken:106   	SM_USER : 
+00:02:19.129 DEBUG SSOTokenValidator.verifySsoToken:108   		rvki12 
+00:02:19.129 DEBUG SSOTokenValidator.verifySsoToken:121   SSO Authentication failed. Did not find boeingWSSOW2K in request header.
+00:02:19.130 DEBUG SSOAuthenticationResult.<init>:60   constructor called with authenticated: false tenant:default userName:null
+00:02:19.130 DEBUG SSOTokenValidator.verifySsoToken:101   called with requestUri = http://www.myuri.com parameters = {name=[Ljava.lang.String;@65e579dc} headers = 
+00:02:19.131 DEBUG SSOTokenValidator.getSsoHeaderName:206   called.
+00:02:19.131 DEBUG SSOTokenValidator.getSsoHeaderName:208   returning: boeingWSSOW2K
+00:02:19.131 DEBUG SSOTokenValidator.verifySsoToken:106   	SM_USER : 
+00:02:19.132 DEBUG SSOTokenValidator.verifySsoToken:108   		nw\rvki12 
+00:02:19.132 DEBUG SSOTokenValidator.verifySsoToken:121   SSO Authentication failed. Did not find boeingWSSOW2K in request header.
+00:02:19.133 DEBUG SSOAuthenticationResult.<init>:60   constructor called with authenticated: false tenant:default userName:null
+00:02:19.133 DEBUG SSOTokenValidator.verifySsoToken:101   called with requestUri = http://www.myuri.com parameters = {name=[Ljava.lang.String;@65e579dc} headers = 
+00:02:19.134 DEBUG SSOTokenValidator.getSsoHeaderName:206   called.
+00:02:19.135 DEBUG SSOTokenValidator.getSsoHeaderName:208   returning: boeingWSSOW2K
+00:02:19.135 DEBUG SSOTokenValidator.verifySsoToken:106   	SM_USER : 
+00:02:19.136 DEBUG SSOTokenValidator.verifySsoToken:108   		nw.boeing.com\rvki12 
+00:02:19.136 DEBUG SSOTokenValidator.verifySsoToken:121   SSO Authentication failed. Did not find boeingWSSOW2K in request header.
+00:02:19.137 DEBUG SSOAuthenticationResult.<init>:60   constructor called with authenticated: false tenant:default userName:null
