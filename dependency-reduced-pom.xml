@@ -4,26 +4,74 @@
   <groupId>y-umc-auth-provider-custom</groupId>
   <artifactId>y-umc-auth-provider-custom</artifactId>
   <name>y-umc-auth-provider-custom</name>
-  <version>98.3.0</version>
+  <version>98.3.0.2</version>
   <description>Custom SSO auth provider for ARIS 9.8</description>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
-    <resources>
-      <resource>
-        <filtering>true</filtering>
-        <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <copy />
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer>
+                  <resource>META-INF/services/com.aris.umc.authentication.spi.ISsoTokenProvider</resource>
+                  <file>src/main/services/com.aris.umc.authentication.spi.ISsoTokenProvider</file>
+                </transformer>
+                <transformer>
+                  <resource>META-INF/services/com.aris.umc.authentication.spi.ISsoTokenValidator</resource>
+                  <file>src/main/services/com.aris.umc.authentication.spi.ISsoTokenValidator</file>
+                </transformer>
+                <transformer>
+                  <mainClass>com.saggs.sso.JarUpdate</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptor>src/assembly/bin.xml</descriptor>
+          <finalName>y-umc-auth-provider-custom-${project.version}</finalName>
         </configuration>
       </plugin>
       <plugin>
@@ -54,55 +102,6 @@
         </executions>
         <configuration>
           <defaultP2Metadata>false</defaultP2Metadata>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>install</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <copy />
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <transformers>
-                <transformer>
-                  <mainClass>com.saggs.sso.JarUpdate</mainClass>
-                </transformer>
-              </transformers>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <descriptor>src/assembly/bin.xml</descriptor>
-          <finalName>y-umc-auth-provider-custom-${project.version}</finalName>
         </configuration>
       </plugin>
     </plugins>
