@@ -42,6 +42,22 @@
           			</archive>
         		</configuration>
       		</plugin>			
+			<plugin>
+        		<artifactId>maven-antrun-plugin</artifactId>
+        		<executions>
+          			<execution>	
+           				<phase>install</phase>
+           				<configuration>
+           					<tasks>
+								<copy file="target/y-umc-auth-provider-custom-${project.version}-bin.zip" todir="${share.dir}" />
+           					</tasks>
+           				</configuration>
+           				<goals>
+           					<goal>run</goal>
+           				</goals>
+       				</execution>
+        		</executions>
+      		</plugin>
       		<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-pack200b-plugin</artifactId>
