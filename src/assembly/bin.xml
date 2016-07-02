@@ -34,9 +34,6 @@ xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assemb
       <include>y*.jar</include>
       <include>y*.pack.gz</include>
     </includes>
-    <excludes>
-    	<exclude>*</exclude>
-    </excludes>
   </fileSet>
   <fileSet>
     <directory>doc</directory>
