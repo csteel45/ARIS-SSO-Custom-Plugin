@@ -1,7 +1,8 @@
 <assembly
-xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd"
+>
 <id>bin</id>
 
 <formats>
@@ -10,51 +11,52 @@ xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assemb
   <format>zip</format>
 </formats>
 
+<files>
+  	<file>
+  		<source>src/main/resources-filtered/setenv.bat</source>
+  		<outputDirectory>/</outputDirectory>
+  		<filtered>true</filtered>
+	</file>
+</files>
+
 <fileSets>
   <fileSet>
-    <includes>
-      <include>README*</include>
-    </includes>
-  </fileSet>
-  <fileSet>
-    <directory>scripts</directory>
+    <directory>src/main/resources</directory>
     <outputDirectory>/</outputDirectory>
     <includes>
       <include>*.bat</include>
     </includes>
-    <excludes>
-    	<exclude>setenv.bat</exclude>
-    </excludes>
     <lineEnding>dos</lineEnding>
+  </fileSet>
+  <fileSet>
+    <includes>
+      <include>README.txt</include>
+      <include>NOTICE.txt</include>
+      <include>LICENSE.txt</include>
+    </includes>
   </fileSet>
   <fileSet>
     <directory>target</directory>
     <outputDirectory>/</outputDirectory>
     <includes>
-      <include>y*.jar</include>
-      <include>y*.pack.gz</include>
+      <include>${artifactId}-${project.version}.jar</include>
+      <include>${artifactId}-${project.version}.jar.pack.gz</include>
     </includes>
   </fileSet>
   <fileSet>
-    <directory>doc</directory>
-    <outputDirectory>/</outputDirectory>
+    <directory>src/main/resources/doc</directory>
+    <outputDirectory>/doc</outputDirectory>
     <includes>
       <include>*</include>
     </includes>
   </fileSet>
   <fileSet>
-    <directory>base/conf</directory>
+    <directory>src/main/resources/base/conf</directory>
     <outputDirectory>/</outputDirectory>
     <includes>
       <include>*</include>
     </includes>
   </fileSet>
 </fileSets>
-<files>
-  	<file>
-  		<source>scripts/setenv.bat</source>
-  		<outputDirectory>/</outputDirectory>
-  		<filtered>true</filtered>
-	</file>
-</files>
+
 </assembly>
