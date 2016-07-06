@@ -31,6 +31,13 @@ import java.util.jar.Manifest;
 import org.apache.log4j.Logger;
 
 /**
+ * JarUpdate is a executable jar file that takes as inputes the path to the ARIS client.zip file
+ * and the y-umc-auth-provider-custom pack file then calls the update method. The update method 
+ * reads through the client .zip file copying all the contained files to a temp jar. When it finds the
+ * existing y-umc-auth-provider-custo jar, it skips it and instead writes the file specified as
+ * the input, then continues copying. When complete, it deletes the original client.zip and renames the
+ * temporary jar to client.zip.
+ *  
  * @author Christopher Steel - Software AG Government Solutions
  *
  * @since Jun 10, 2016 12:55:58 PM
