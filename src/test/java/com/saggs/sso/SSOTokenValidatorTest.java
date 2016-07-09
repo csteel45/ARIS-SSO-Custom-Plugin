@@ -24,7 +24,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 /**
  * @author Christopher Steel - Software AG Government Solutions
@@ -32,6 +34,7 @@ import org.junit.Test;
  * @since Feb 4, 2015 3:17:13 PM
  * @version 1.0
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SSOTokenValidatorTest {
 	SSOTokenValidator validator = null;
 	/**
@@ -42,6 +45,15 @@ public class SSOTokenValidatorTest {
 		validator = new SSOTokenValidator();
 	}
 
+	/**
+	 * Test method for {@link com.saggs.sso.SSOTokenValidator#getSsoHeaderName()}.
+	 */
+	@Test
+	public void testGetSsoHeaderName() {
+		assertTrue(validator.getSsoHeaderName().equals(
+				SSOProperties.getInstance("src/resources/base/conf/sso-plugin.properties").getProperty("sso.validator.header_name", "SM_USER")));
+	}
+	
 	/**
 	 * Test method for {@link com.saggs.sso.SSOTokenValidator#verifySsoToken(java.lang.String, byte[])}.
 	 */
@@ -61,22 +73,13 @@ public class SSOTokenValidatorTest {
 		Map<String, String[]> parameters = new HashMap<String, String[]>();
 		parameters.put("name", new String[] { "val1", "Val2" });
 		Map<String, String[]> headers = new HashMap<String, String[]>();
-		headers.put("SM_USER", new String[] { "rvki12" });
-		validator.verifySsoToken("http://www.myuri.com", parameters, headers);
-		headers.put("SM_USER", new String[] { "nw\\rvki12" });
-		validator.verifySsoToken("http://www.myuri.com", parameters, headers);
-		headers.put("SM_USER", new String[] { "nw.boeing.com\\rvki12" });
-		validator.verifySsoToken("http://www.myuri.com", parameters, headers);
+		headers.put("boeingWSSOW2K", new String[] { "rvki12" });
+		assertTrue(validator.verifySsoToken("http://www.myuri.com", parameters, headers).isAuthenticated());;
+		headers.put("boeingWSSOW2K", new String[] { "nw\\rvki12" });
+		assertTrue(validator.verifySsoToken("http://www.myuri.com", parameters, headers).isAuthenticated());;
+		headers.put("boeingWSSOW2K", new String[] { "nw.boeing.com\\rvki12" });
+		assertFalse(validator.verifySsoToken("http://www.myuri.com", parameters, headers).isAuthenticated());
 
-	}
-
-	/**
-	 * Test method for {@link com.saggs.sso.SSOTokenValidator#getSsoHeaderName()}.
-	 */
-	@Test
-	public void testGetSsoHeaderName() {
-		assertTrue(validator.getSsoHeaderName().equals(
-				SSOProperties.getInstance().getProperty("sso.validator.header_name", "SM_USER")));
 	}
 
 }

@@ -20,9 +20,16 @@ package com.saggs.sso;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import com.saggs.sso.*;
 
@@ -32,20 +39,16 @@ import com.saggs.sso.*;
  * @since Jan 25, 2015 5:51:05 AM
  * @version 1.0
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SSOPropertiesTest {
 	SSOProperties props;
+	boolean updated = false;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		try {
-			props = SSOProperties.getInstance();
-		}
-		catch(Exception e) {
-			
-		}
 	}
 
 	/**
@@ -60,6 +63,7 @@ public class SSOPropertiesTest {
 	 */
 	@Test
 	public void testGetInstance() {
+		props = SSOProperties.getInstance("src/resources/base/conf/sso-plugin.properties");
 		assertTrue("getInstance != null", props != null);
 	}
 
@@ -68,21 +72,47 @@ public class SSOPropertiesTest {
 	 */
 	@Test
 	public void testGetProperty() {
+		props = SSOProperties.getInstance("src/resources/base/conf/sso-plugin.properties");
 		assertTrue(props.getProperty("sso.validator.use_domain", "def").equalsIgnoreCase("true"));
-		//assertTrue(true);
 	}
-	
-	//public void testLoadFileNotExists() {
-		//assertTrue(props.getProperty("sso.validator.use_domain", "def").equalsIgnoreCase("def"));
-		//assertTrue(true);
-	//}
 
 	/**
 	 * Test method for {@link com.saggs.sso.SSOProperties#load(java.io.File)}.
 	 */
 	@Test
 	public void testLoad() {
-		assertTrue(true);
+		props = SSOProperties.getInstance("src/resources/base/conf/sso-plugin.properties");
+		assertTrue(props.getProperty("sso.validator.use_domain", "def").equalsIgnoreCase("true"));
+		
+	}
+	
+	@Test
+	public void testLoadFileNotExists() {
+		boolean exception = false;
+		props = SSOProperties.getInstance("src/resources/base/conf/sso-plugin.properties");
+		try {
+			props.load(new File("NotExists"));
+		}
+		catch (IOException e) {
+			exception = true;
+		}
+		assertTrue(exception);
+		assertFalse(props.getProperty("sso.validator.use_domain", "def").equalsIgnoreCase("def"));
+		assertTrue(props.getProperty("null", "def").equalsIgnoreCase("def"));
+	}
+
+	/**
+	 * Test method for {@link com.saggs.sso.SSOProperties#saveDefaults()}.
+	 */
+	@Test
+	public void testSaveDefaults() {
+		File file = new File("src/resources/base/conf/test-sso-plugin.properties");
+		assertFalse(file.exists());
+		props = SSOProperties.getInstance("src/resources/base/conf/test-sso-plugin.properties");
+		props.getProperty("X", "def");
+		File fileNew = new File("src/resources/base/conf/test-sso-plugin.properties");
+		assertTrue(fileNew.exists());
+		file.delete();
 	}
 
 	/**
@@ -90,7 +120,25 @@ public class SSOPropertiesTest {
 	 */
 	@Test
 	public void testUpdate() {
-		assertTrue(true);
-	}
+		props = SSOProperties.getInstance("src/resources/base/conf/sso-plugin.properties");
+		assertFalse(updated);
+		Observer o = new Observer() {
 
+			@Override
+			public void update(Observable o, Object arg) {
+				updated = true;
+			}
+			
+		};
+		props.addObserver(o);
+		props.saveDefaults();
+		try {
+			Thread.sleep(2500);
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		assertTrue(updated);
+	}
+	
 }
