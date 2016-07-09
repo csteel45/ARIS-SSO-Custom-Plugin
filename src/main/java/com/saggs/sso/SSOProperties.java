@@ -23,7 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Properties;
@@ -43,9 +43,8 @@ import org.apache.log4j.Logger;
  */
 public class SSOProperties extends Observable implements Observer {
 	private static SSOProperties instance = null;
-	private final static String fileName = "./base/conf/sso-plugin.properties";
+	private static String fileName = "base/conf/sso-plugin.properties";
 	private Properties properties = new Properties();
-	private PrintWriter writer;
 	private static Logger log = Logger.getLogger(SSOProperties.class);  // Use ARIS logger
 	private FileWatcher watcher;
 
@@ -58,18 +57,10 @@ public class SSOProperties extends Observable implements Observer {
 	 * 
 	 * @see FileWatcher#addObserver(Observer)
 	 */
-	private SSOProperties() {
+	SSOProperties() {
 		super();
-		log.warn("Constructor called");
 	}
-	
-	/**
-	 * Singleton pattern method for obtaining the singleton instance.
-	 * In this implementation, the properties are loaded when the method is 
-	 * first invoked and the underlying static instance is constructed.
-	 * 
-	 * @return The static instance of the <code>SSOProperties</code> class
-	 */
+
 	public synchronized static SSOProperties getInstance() {
 		log.info("called");
 		if(instance == null) {
@@ -80,15 +71,31 @@ public class SSOProperties extends Observable implements Observer {
 		return instance;
 	}
 	
+	/**
+	 * Singleton pattern method for obtaining the singleton instance.
+	 * In this implementation, the properties are loaded when the method is 
+	 * first invoked and the underlying static instance is constructed.
+	 * 
+	 * @return The static instance of the <code>SSOProperties</code> class
+	 */
+	public synchronized static SSOProperties getInstance(String filePath) {
+		log.info("getInstance(" + filePath + ") called");
+		instance = null; // Force reload.
+		fileName = filePath;
+		
+		return getInstance();
+	}
+	
 	protected void init() {
 		try {
 			File file = new File(fileName);
 			if(file == null || !file.exists()) {
-				log.info("file does not exist: " + file.getAbsolutePath());
+				log.info("file does not exist: " + file.getAbsolutePath() + ", loading defaults and creating file.");
 				loadDefaults();
+				saveDefaults();
 			}
 			else {	
-				log.error("Loading properties file: " + file.getAbsolutePath());
+				log.info("Loading properties file: " + file.getAbsolutePath());
 				load(file);
 				watcher = FileWatcher.watch(file);
 				if(watcher != null) {
@@ -114,12 +121,12 @@ public class SSOProperties extends Observable implements Observer {
 	 * @throws FileNotFoundException 
 	 */
 	protected void load(File file) throws IOException {
-		log.info("called for file: " + file.getAbsolutePath());
+		log.debug("called for file: " + file.getAbsolutePath());
 
 		try {
 			FileInputStream fis = new FileInputStream(file);
 			properties.load(fis);
-			log.info("Loaded properties file: " + file.getAbsolutePath());
+			log.debug("Loaded properties file: " + file.getAbsolutePath());
 		} catch (IOException e) {
 			log.error("Error loading file: " + file.getAbsolutePath());
 			throw e;
@@ -127,15 +134,36 @@ public class SSOProperties extends Observable implements Observer {
 	}
 	
 	protected void loadDefaults() {
+		log.info("Loading sso property defaults");
 		instance.properties.put("sso.validator.trim_domain", "true");
 		instance.properties.put("sso.validator.use_domain", "true");
 		instance.properties.put("sso.validator.header_name", "boeingWSSOW2K");
+		instance.properties.put("sso.provider.userkey", "USERNAME");
+		instance.properties.put("sso.provider.domainkey", "USERDOMAIN");
 		instance.properties.put("sso.logger.file_name", "sso-custom-plugin.log");
 		instance.properties.put("sso.logger.pattern", "%d %-5p [%c{1}] %C{1}.%M - %m%n");
 		instance.properties.put("sso.logger.threshold", "DEBUG");
 		instance.properties.put("sso.logger.max_file_size", "10MB");
 		instance.properties.put("sso.logger.append", "true");
 		instance.properties.put("sso.logger.immediateFlush", "true");		
+	}
+	
+	protected void saveDefaults() {
+		log.info("Saving property defaults...");
+		try {
+			File file = new File(fileName);
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			OutputStream os = new FileOutputStream(file);
+			instance.properties.store(os, "Defaults created and saved.");
+			os.close();
+			os.flush();
+			log.debug("Successfully saved default sso properties to file: " + file.getAbsolutePath());
+		}
+		catch (Exception e) {
+			log.error("Exception saving default sso properties file: " + e);
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -179,7 +207,7 @@ public class SSOProperties extends Observable implements Observer {
 	 * @param args Not Used.
 	 */
 	public static void main(String[] args) {
-		final SSOProperties props = SSOProperties.getInstance();
+		final SSOProperties props = SSOProperties.getInstance("base/conf/sso-plugin.properties");
 		System.out.println("Default property for non-existent: " + props.getProperty("sso.logger.file_name", "default_value"));
 		Observer o = new Observer() {
 			@Override

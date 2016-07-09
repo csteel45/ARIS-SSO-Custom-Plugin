@@ -40,14 +40,6 @@ public class SSOAuthenticationResult implements ISsoResult {
 	private static Logger log = SSOPluginLogger.getLogger(SSOAuthenticationResult.class);
 	
 	/**
-	 * Default constructor. Logs that it has been called, but nothing else.
-	 */
-	public SSOAuthenticationResult() {
-		super();
-		log.debug("constructor called.");	
-	}
-	
-	/**
 	 * Overloaded constructor meant for mainstream use. Constructed by the TokenValidator
 	 * to indicate whether or not the user was authenticated via SSO either through a
 	 * header variable in a web request, or via the TokenProvider class in the download client.
@@ -56,8 +48,10 @@ public class SSOAuthenticationResult implements ISsoResult {
 	 * @param tenant The tenant that the user was authenticated to.
 	 * @param userName The name of the user that was authenticated, should match the userid in UMC.
 	 */
-	public SSOAuthenticationResult(boolean authenticated, String tenant, String userName) {
-		log.debug("constructor called with authenticated: " + authenticated + " tenant:" + tenant + " userName:" + userName);	
+	@SuppressWarnings("static-access")
+	public SSOAuthenticationResult(boolean authenticated, String tenant, String userName, Logger logger) {
+		this.log = logger.getLogger(SSOAuthenticationResult.class);
+		this.log.debug("constructor called with authenticated: " + authenticated + " tenant:" + tenant + " userName:" + userName);	
 		this.tenant = tenant;
 		this.userName = userName;
 		this.authenticated = authenticated;

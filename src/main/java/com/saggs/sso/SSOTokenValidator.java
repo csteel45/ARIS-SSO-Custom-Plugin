@@ -41,11 +41,14 @@ import com.aris.umc.authentication.spi.ISsoTokenValidator;
 public class SSOTokenValidator implements ISsoTokenValidator {
 	protected String SSO_HEADER_NAME = "SM_USER";
 	protected String tenant = "default";
-	private Logger log = SSOPluginLogger.getLogger(SSOTokenValidator.class);
-	protected SSOProperties properties = SSOProperties.getInstance();
+	private Logger log = null;
+	protected SSOProperties properties = null;
 
 	public SSOTokenValidator() {
+		log = SSOPluginLogger.getLogger(SSOTokenValidator.class);
 		log.debug("constructor called.");
+		properties = SSOProperties.getInstance("base/conf/sso-plugin.properties");
+		SSOPluginLogger.getInstance().setSSOPropertiesInstance(properties);
 	}
 
 	/**
@@ -73,7 +76,7 @@ public class SSOTokenValidator implements ISsoTokenValidator {
 		} else {
 			log.debug("called with tenant = " + tenant + " and NULL token");
 		}
-		return new SSOAuthenticationResult(true, tenant, getArisUser(tokenStr));
+		return new SSOAuthenticationResult(true, tenant, getArisUser(tokenStr), log);
 	}
 
 	/**
@@ -101,6 +104,7 @@ public class SSOTokenValidator implements ISsoTokenValidator {
 		String ssoHeaderName = getSsoHeaderName();
 		if (log.isDebugEnabled()) {
 			// Log all headers passed in the request
+			log.debug("HTTP request headers and values:");
 			for (String header : headers.keySet()) {
 				log.debug("\t" + header + " : ");
 				for (String value : headers.get(header)) {
@@ -114,11 +118,11 @@ public class SSOTokenValidator implements ISsoTokenValidator {
 			// TODO: Check if there is an API to validate the user is valid in ARIS.
 			String userName = getArisUser(userId);
 			log.debug("SSO Authentication succeeded for user id: " + userName);
-			return new SSOAuthenticationResult(true, tenant, userName);
+			return new SSOAuthenticationResult(true, tenant, userName, log);
 		}
 
 		log.debug("SSO Authentication failed. Did not find " + ssoHeaderName + " in request header.");
-		return new SSOAuthenticationResult(false, tenant, null);
+		return new SSOAuthenticationResult(false, tenant, null, log);
 	}
 
 	/**

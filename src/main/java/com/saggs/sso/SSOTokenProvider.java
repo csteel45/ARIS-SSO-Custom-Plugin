@@ -18,7 +18,6 @@
 
 package com.saggs.sso;
 
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 
 import com.aris.umc.authentication.spi.ISsoTokenProvider;
@@ -38,17 +37,22 @@ import com.aris.umc.authentication.spi.ISsoTokenProvider;
  * @version 1.0
  */
 public class SSOTokenProvider implements ISsoTokenProvider {
-	private static Logger log = SSOPluginLogger.getLogger(SSOTokenProvider.class);
-	private static String USER_KEY = "USERNAME";
-	private static String DOMAIN_KEY = "USERDOMAIN";
+	private static Logger log = null;
 	private static String UNKNOWN = "Unknown";
+	protected String USER_KEY = "USERNAME";
+	protected String DOMAIN_KEY = "USERDOMAIN";
+	protected SSOProperties properties = null;
 
 	/**
 	 * Default constructor. Logs that it has been called and does nothing else.
 	 */
 	public SSOTokenProvider() {
-		log.error("constructor called.");
-		System.err.println("################################### LOGGING TO FILE: " + ((FileAppender)log.getAllAppenders().nextElement()).getFile());
+		log = SSOPluginLogger.getLogger(SSOTokenProvider.class);
+		log.debug("constructor called.");
+		properties = SSOProperties.getInstance("config/sso-plugin.properties");
+		SSOPluginLogger.getInstance().setSSOPropertiesInstance(properties);
+		USER_KEY = properties.getProperty("sso.provider.userkey", "USERNAME");
+		DOMAIN_KEY = properties.getProperty("sso.provider.domainkey", "USERDOMAIN");
 	}
 	
 	/**
@@ -107,7 +111,7 @@ public class SSOTokenProvider implements ISsoTokenProvider {
 	 */
 	public static void main(String[] args) {
 		SSOTokenProvider provider = new SSOTokenProvider();
-		System.out.println("Token: " + new String(provider.acquireSsoToken("default", "alfabet123")));
+		log.info("Token: " + new String(provider.acquireSsoToken("default", "alfabet123")));
 	}
 
 }

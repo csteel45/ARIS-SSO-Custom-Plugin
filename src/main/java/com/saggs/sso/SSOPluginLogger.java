@@ -48,9 +48,9 @@ public class SSOPluginLogger implements Observer {
 	private int MAX_BACKUPS = 1;
 	private String pattern = "%d %-5p [%c{1}] %C{1}.%M - %m%n";
 	private static RollingFileAppender appender = new RollingFileAppender();
-	private SSOProperties props = null;
 	private static Logger logger = null;
 	private static SSOPluginLogger instance = null;
+	private SSOProperties props = new SSOProperties();
 	
 	/**
 	 * Private default constructor intended only for use by the getInstance method.
@@ -73,8 +73,6 @@ public class SSOPluginLogger implements Observer {
 	public synchronized static SSOPluginLogger getInstance() {
 		if(instance == null) {
 			instance = new SSOPluginLogger();
-			instance.props = SSOProperties.getInstance();
-			instance.props.addObserver(instance);
 			logger.addAppender(instance.getAppender());
 			appender.activateOptions();
 		}
@@ -105,8 +103,8 @@ public class SSOPluginLogger implements Observer {
 	protected FileAppender getAppender() {
 		logger.debug("called");
 		appender.setName(FILE_LOGGER + System.currentTimeMillis());
-		appender.setFile(props.getProperty("sso.logger.file_name", fileName));
-		loadProperties();
+		appender.setFile(fileName);
+		instance.loadProperties();
 		appender.activateOptions();
 		return appender;
 	}
@@ -121,10 +119,15 @@ public class SSOPluginLogger implements Observer {
 	public void update(Observable o, Object arg) {
 		logger.info("Update called. Reloading properties.");
 
-		loadProperties();
+		instance.loadProperties();
 		appender.activateOptions();
 	}
 	
+	public void setSSOPropertiesInstance(SSOProperties props) {
+		instance.props = props;
+		instance.props = SSOProperties.getInstance();
+		instance.props.addObserver(instance);
+	}
 	/**
 	 * Loads the <code>RollingFileAppender</code> properties and then updates the appender. 
 	 * Changes to the appender will appear in the log file at the return of this method.
